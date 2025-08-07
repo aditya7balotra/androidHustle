@@ -1,0 +1,6 @@
+**/.venv/
+build/
+**/.env*
+**/androidHustle.egg-info/
+**/ahustleExtracts/
+**/__pycache__/

@@ -1,0 +1,14 @@
+Third-Party Licenses
+====================
+
+This project uses the following third-party libraries:
+
+1. pure-python-adb
+   License: MIT
+   License file: LICENSES/pure-python-adb.txt
+
+2. tqdm
+   License: MIT
+   License file: LICENSES/tqdm.txt
+
+No modifications were made to these libraries.
