@@ -18,12 +18,12 @@ setup(
     package_dir={"": "src"},
     install_requires=requirements,
     classifiers=[
-        'Programming Language :: Python :: 3.13',
+        'Programming Language :: Python :: 3.12',
         'License :: OSI Approved :: MIT License',
         'Operating System :: Microsoft :: Windows',
         'Operating System :: POSIX :: Linux',
     ],
-    python_requires='>=3.13,<3.14',
+    python_requires='>=3.12,<3.14',
     entry_points={
         'console_scripts': [
             'ahustle=androidHustle.cli:cli',
