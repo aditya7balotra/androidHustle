@@ -74,6 +74,14 @@ Before using androidHustle, ensure you have:
    - **macOS**: `brew install android-platform-tools`
 3. **Android device** with USB debugging enabled
 
+### Responsible Use & Permissions
+
+androidHustle is intended for **legitimate, user-authorized backups and data exports** on
+devices you own or have explicit permission to access. It is **not** malware, does not
+exploit vulnerabilities, and relies on standard ADB access. The device owner must enable
+USB debugging and accept the ADB authorization prompt on the device before any data can
+be accessed.
+
 ### Enable USB Debugging on Your Android Device
 
 1. Go to **Settings** → **About Phone**
