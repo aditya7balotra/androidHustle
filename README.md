@@ -37,7 +37,7 @@ A Python package that simplifies interaction with Android devices, enabling you 
 - Extract data from messaging apps (WhatsApp, Telegram)
 - Get insights into device information
 
-Whether you're building a forensic tool, automating device backups, or conducting research, androidHustle handles the complexity of ADB communication and data extraction.
+Whether you're building a automating device backup, androidHustle handles the complexity of ADB communication and data extraction.
 
 ---
 
