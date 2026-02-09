@@ -1,8 +1,10 @@
 # androidHustle
 
-**Automate Android device interaction and data extraction using ADB (Android Debug Bridge)**
+**Automate Android device interaction and data extraction using ADB (Android Debug Bridge).**
 
-A Python package that simplifies interaction with Android devices, enabling you to programmatically extract messages, contacts, media files, and more from connected Android devices.
+androidHustle is a Python toolkit that connects to Android devices via ADB and extracts
+common data sources (call logs, SMS, contacts, device media, WhatsApp, Telegram, and
+device metadata). It provides both a CLI (`ahustle`) and a Python API.
 
 ---
 
@@ -16,12 +18,14 @@ A Python package that simplifies interaction with Android devices, enabling you 
 - [Usage](#usage)
   - [CLI Usage](#cli-usage)
   - [Programmatic Usage](#programmatic-usage)
+- [Output Layout](#output-layout)
 - [Project Structure](#project-structure)
 - [Module Documentation](#module-documentation)
   - [Connection Management](#connection-management)
   - [Data Loading Modules](#data-loading-modules)
   - [CLI Commands](#cli-commands)
 - [Examples](#examples)
+- [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -29,15 +33,16 @@ A Python package that simplifies interaction with Android devices, enabling you 
 
 ## Overview
 
-**androidHustle** is a comprehensive automation toolkit for Android devices. It leverages ADB to establish secure connections with Android devices and provides an intuitive interface to:
+**androidHustle** is a comprehensive automation toolkit for Android devices. It leverages
+ADB to establish connections with Android devices and provides an interface to:
 
 - Extract call logs and SMS messages
 - Export contacts and device metadata
-- Download media files (images, videos, audio)
-- Extract data from messaging apps (WhatsApp, Telegram)
-- Get insights into device information
+- Download media files (images, videos, audio, documents)
+- Extract data from WhatsApp and Telegram
 
-Whether you're building a automating device backup, androidHustle handles the complexity of ADB communication and data extraction.
+Whether you're automating a device backup or performing a one-off export, androidHustle
+handles the complexity of ADB communication and data extraction.
 
 ---
 
@@ -54,7 +59,7 @@ Whether you're building a automating device backup, androidHustle handles the co
 | **Device Metadata** | ✅ Get device info, build properties, system details |
 | **Multi-Device Support** | ✅ Connect to multiple devices by serial number |
 | **Progress Tracking** | ✅ Real-time progress bars for large data transfers |
-| **Flexible Output** | ✅ JSON and raw data formats |
+| **Flexible Output** | ✅ JSON and raw text outputs |
 
 ---
 
@@ -62,8 +67,8 @@ Whether you're building a automating device backup, androidHustle handles the co
 
 Before using androidHustle, ensure you have:
 
-1. **Python 3.12 or higher** - [Download Python](https://www.python.org/downloads/)
-2. **ADB (Android Debug Bridge)** installed
+1. **Python 3.12–3.13** - [Download Python](https://www.python.org/downloads/)
+2. **ADB (Android Debug Bridge)** installed and available in `PATH`
    - **Windows**: Download from [Android SDK Platform Tools](https://developer.android.com/tools/releases/platform-tools)
    - **Linux**: `sudo apt-get install android-tools-adb`
    - **macOS**: `brew install android-platform-tools`
@@ -82,7 +87,7 @@ Before using androidHustle, ensure you have:
 
 ## Installation
 
-### Option 1: Install from PyPI (Once Published | not published yet)
+### Option 1: Install from PyPI (Once Published)
 
 ```bash
 pip install androidHustle
@@ -105,6 +110,9 @@ ahustle --list-devices
 # Check installed version
 python -c "import androidHustle; print(androidHustle.__version__)"
 ```
+
+> **Note**: The package is not published to PyPI yet. When it is, the command above will
+> be the recommended install path.
 
 ---
 
@@ -136,7 +144,7 @@ call_extractor = Call(conn)
 
 # Extract call logs
 call_extractor.get_call_logs()
-# Data saved to: my_extraction/call_logs/
+# Data saved to: my_extraction/logs/
 ```
 
 ### 3. Access Your Data
@@ -144,13 +152,12 @@ call_extractor.get_call_logs()
 Extracted files are organized by data type in the extraction folder:
 ```
 my_extraction/
-├── call_logs/
-├── sms_logs/
+├── logs/
 ├── contacts/
-├── device_media/
+├── device/
 ├── whatsapp/
 ├── telegram/
-└── metadata/
+└── metadata.txt
 ```
 
 ---
@@ -222,7 +229,7 @@ ahustle --device img vid aud
 ahustle -dev img file
 ```
 
-#### Extract Contacts
+#### Extract Metadata
 
 ```bash
 ahustle --metadata
@@ -278,6 +285,43 @@ contacts.get_contacts()
 ```
 
 ---
+
+## Output Layout
+
+By default, the CLI writes to a folder called `ahustleExtracts` in your current working
+directory. You can override this via `Connection(fname="...")` in Python usage.
+
+```
+ahustleExtracts/
+├── logs/
+│   ├── raw_call_logs.txt
+│   ├── save_call_logs.json
+│   ├── raw_sms_logs.txt
+│   └── saved_sms_logs.json
+├── contacts/
+│   ├── raw_contacts.txt
+│   └── saved_contacts.json
+├── device/
+│   ├── img/
+│   ├── vid/
+│   ├── aud/
+│   └── file/
+├── whatsapp/
+│   ├── image/
+│   ├── audio/
+│   ├── video/
+│   ├── documents/
+│   ├── voiceNote/
+│   └── videoNote/
+├── telegram/
+│   ├── cache/
+│   ├── images/
+│   ├── documents/
+│   ├── files/
+│   ├── audio/
+│   └── video/
+└── metadata.txt
+```
 
 ## Project Structure
 
@@ -368,8 +412,8 @@ call = Call(conn)
 call.get_call_logs()
 
 # Files created:
-# - call_logs/raw_call_logs.txt
-# - call_logs/call_logs.json
+# - logs/raw_call_logs.txt
+# - logs/save_call_logs.json
 ```
 
 **Extracted Data:** Call timestamp, duration, caller/callee info
@@ -387,8 +431,8 @@ sms = Sms(conn)
 sms.get_sms_logs()
 
 # Files created:
-# - sms_logs/raw_sms_logs.txt
-# - sms_logs/sms_logs.json
+# - logs/raw_sms_logs.txt
+# - logs/saved_sms_logs.json
 ```
 
 **Extracted Data:** Message content, sender, timestamp, read status
@@ -442,7 +486,7 @@ metadata = Metadata(conn)
 metadata.get_metadata()
 
 # Files created:
-# - metadata/metadata.json
+# - metadata.txt
 ```
 
 **Extracted Data:** Device name, model, Android version, IMEI, etc.
@@ -635,6 +679,19 @@ adb devices
 
 ---
 
+## Publishing to PyPI (Maintainers)
+
+When you decide to publish, update the version in both `src/androidHustle/version.py`
+and `setup.py`, then build and upload the package:
+
+```bash
+python -m pip install --upgrade build twine
+python -m build
+twine upload dist/*
+```
+
+---
+
 ## Contributing
 
 Contributions are welcome! Please feel free to:
@@ -667,5 +724,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [tqdm](https://github.com/tqdm/tqdm) - Progress bars for Python
 
 ---
-
-**Last Updated:** February 2026
